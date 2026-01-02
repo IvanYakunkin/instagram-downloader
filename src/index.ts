@@ -1,0 +1,59 @@
+import { useMainPageObserver } from "./observers/mainPageObserver";
+import { usePostPageObserver } from "./observers/postPageObserver";
+import { registerRouterObserver } from "./observers/routerObserver";
+import { useStoriesPageObserver } from "./observers/storiesPageObserver";
+import { pageSelectors } from "./selectors/pageSelectors";
+import { setVideoLinks } from "./states/videoLinks";
+import { IRouter } from "./types/global";
+import { injectProgressContainer } from "./utils/progressPopup";
+import { findCurrentRoute, useRouterObserver } from "./utils/router";
+
+const router: IRouter[] = [
+    {path: "", targetSelector: pageSelectors.main.container, callback: useMainPageObserver},
+    {path: "p", targetSelector: pageSelectors.post.container, callback: usePostPageObserver},
+    {path: "stories", targetSelector: pageSelectors.stories.container, callback: useStoriesPageObserver},
+];
+
+// Inject scripts that modify some built-in methods
+(function() {
+    const script = document.createElement('script');
+    script.src = chrome.runtime.getURL('injectedScripts.js');
+    script.type = 'text/javascript';
+
+    (document.head || document.documentElement).appendChild(script);
+}());
+
+// Observer when navigating
+window.addEventListener('pushstate', () => {
+    const currentRoute = findCurrentRoute(router);
+    if(currentRoute) useRouterObserver(currentRoute);
+});
+
+window.addEventListener('popstate', () => {
+    const currentRoute = findCurrentRoute(router);
+    if(currentRoute) useRouterObserver(currentRoute);
+});
+
+// Initial page loading
+window.addEventListener("DOMContentLoaded", () => {
+    injectProgressContainer();
+    const currentRoute = findCurrentRoute(router);
+    if(!currentRoute) return;
+    const localObserverElement: HTMLElement | null = document.querySelector(currentRoute.targetSelector);
+    registerRouterObserver(() => currentRoute.callback(localObserverElement), localObserverElement);
+});
+
+// Receive videos
+window.addEventListener('message', (event) => {
+  if (
+    event.source !== window ||
+    event.data?.source !== 'EXT_FETCH_INTERCEPT'
+  ) {
+    return;
+  }
+
+  setVideoLinks(event.data.links);
+});
+
+
+

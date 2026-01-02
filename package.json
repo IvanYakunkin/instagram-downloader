@@ -1,0 +1,26 @@
+{
+  "name": "instagram-downloader",
+  "version": "1.0.0",
+  "description": "Chrome-extension for downloading photos and videos from Instagram",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "dev": "npm run watch"
+  },
+  "author": "Yakunkin I.A.",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chrome": "^0.1.1",
+    "@types/node": "^24.1.0",
+    "copy-webpack-plugin": "^13.0.1",
+    "css-loader": "^7.1.2",
+    "esbuild-loader": "^4.4.2",
+    "mini-css-extract-plugin": "^2.9.4",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.8.3",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
+  }
+}
