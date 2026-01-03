@@ -26,4 +26,19 @@ export const pageSelectors: PageSelectors = {
       "align-items": "center",
     },
   },
+  reels: {
+    container: "main>div:first-child",
+    tools: "div.x78zum5.xedcshv:last-child>div:last-child",
+    toolsCss: {
+   
+    },
+  },
+  reel: {
+    container: "body",
+    tools: "section",
+    toolsCss: {
+      display: "flex",
+      "align-items": "center",
+    }
+  }
 };

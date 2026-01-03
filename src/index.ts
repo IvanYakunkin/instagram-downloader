@@ -1,5 +1,7 @@
 import { useMainPageObserver } from "./observers/mainPageObserver";
 import { usePostPageObserver } from "./observers/postPageObserver";
+import { useReelPageObserver } from "./observers/reelPageObserver";
+import { useReelsPageObserver } from "./observers/reelsPageObserver";
 import { registerRouterObserver } from "./observers/routerObserver";
 import { useStoriesPageObserver } from "./observers/storiesPageObserver";
 import { pageSelectors } from "./selectors/pageSelectors";
@@ -12,6 +14,8 @@ const router: IRouter[] = [
     {path: "", targetSelector: pageSelectors.main.container, callback: useMainPageObserver},
     {path: "p", targetSelector: pageSelectors.post.container, callback: usePostPageObserver},
     {path: "stories", targetSelector: pageSelectors.stories.container, callback: useStoriesPageObserver},
+    {path: "reels", targetSelector: pageSelectors.reels.container, callback: useReelsPageObserver},
+    {path: "reel", targetSelector: pageSelectors.reel.container, callback: useReelPageObserver},
 ];
 
 // Inject scripts that modify some built-in methods

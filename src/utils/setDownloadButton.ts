@@ -42,10 +42,29 @@ const generateDownloadBtn = (containerTag: HTMLElement, buttonStyles?: IStyles) 
     return downloadButton;
 }
 
-export const setDownloadButton = (containerTag: HTMLElement, toolsTagClass: string, toolsCss: Record<string, string>, buttonStyles?: IStyles) => {
+const insertAtIndex = (parent: HTMLElement, newElement: HTMLElement, index: number) => {
+  const children = parent.children;
+  if (index >= children.length) {
+    parent.appendChild(newElement);
+  } else {
+    parent.insertBefore(newElement, children[index]);
+  }
+}
+
+export const setDownloadButton = (
+    containerTag: HTMLElement,
+    toolsTagClass: string,
+    toolsCss: Record<string, string>,
+    buttonStyles?: IStyles,
+    insertIndex?: number
+) => {
     const postTools = findPostTools(containerTag, toolsTagClass, toolsCss);
     if(postTools){
         const downloadBtn = generateDownloadBtn(containerTag, buttonStyles);
-        postTools.appendChild(downloadBtn);
+        if(insertIndex){
+            insertAtIndex(postTools, downloadBtn, insertIndex);
+        }else{
+            postTools.appendChild(downloadBtn);
+        }
     }
 }

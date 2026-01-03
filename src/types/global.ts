@@ -24,8 +24,4 @@ export interface SelectorsConfig {
   toolsCss: IStyles;
 }
 
-export interface PageSelectors{
-  main: SelectorsConfig;
-  post: SelectorsConfig;
-  stories: SelectorsConfig;
-}
+export type PageSelectors = Record<string, SelectorsConfig>;
