@@ -10,8 +10,8 @@ export const pageSelectors: PageSelectors = {
     },
   },
   post: {
-    container: "article",
-    tools: "section",
+    container: "body",
+    tools: "article section",
     toolsCss: {
       display: "flex",
       "align-items": "center",

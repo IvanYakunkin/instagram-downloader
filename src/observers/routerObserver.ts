@@ -15,4 +15,6 @@ export const registerRouterObserver = (callback: (element: HTMLElement | null) =
             childList: true,
         });
     }
+
+    return clb;
 }
