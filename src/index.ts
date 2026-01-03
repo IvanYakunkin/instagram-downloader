@@ -2,13 +2,12 @@ import { useMainPageObserver } from "./observers/mainPageObserver";
 import { usePostPageObserver } from "./observers/postPageObserver";
 import { useReelPageObserver } from "./observers/reelPageObserver";
 import { useReelsPageObserver } from "./observers/reelsPageObserver";
-import { registerRouterObserver } from "./observers/routerObserver";
+import { findCurrentRoute, registerPageObserver, useRouterObserver } from "./observers/routerObserver";
 import { useStoriesPageObserver } from "./observers/storiesPageObserver";
 import { pageSelectors } from "./selectors/pageSelectors";
 import { setVideoLinks } from "./states/videoLinks";
 import { IRouter } from "./types/global";
 import { injectProgressContainer } from "./utils/progressPopup";
-import { findCurrentRoute, useRouterObserver } from "./utils/router";
 
 const router: IRouter[] = [
     {path: "", targetSelector: pageSelectors.main.container, callback: useMainPageObserver},
@@ -44,7 +43,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const currentRoute = findCurrentRoute(router);
     if(!currentRoute) return;
     const localObserverElement: HTMLElement | null = document.querySelector(currentRoute.targetSelector);
-    registerRouterObserver(() => currentRoute.callback(localObserverElement), localObserverElement);
+    registerPageObserver(() => currentRoute.callback(localObserverElement), localObserverElement);
 });
 
 // Receive videos

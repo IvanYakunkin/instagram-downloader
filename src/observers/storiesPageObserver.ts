@@ -7,6 +7,11 @@ export const useStoriesPageObserver = () => {
         color: "white",
         "padding-left": "5px",
     }
+    const container: HTMLElement | null = document.querySelector(pageSelectors.stories.container);
+
+    if(container){
+        setDownloadButton(container, pageSelectors.stories.tools, pageSelectors.stories.toolsCss, localStyles);
+    }
 
     return new MutationObserver((mutation) => {             
         for(let i = 0; i < mutation.length; i++){

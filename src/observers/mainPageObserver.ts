@@ -6,9 +6,12 @@ export const useMainPageObserver = (parentTag?: HTMLElement | null) => {
     // Load initial posts
     const mainTag = parentTag?.lastElementChild;
     const articles = mainTag?.querySelectorAll("article");
-    if(articles){
+    if(articles && articles.length){
         for(const article of Array.from(articles)){
-            setDownloadButton(article, pageSelectors.main.tools, pageSelectors.main.toolsCss, buttonCss);
+            const childrenLength = article.querySelector(pageSelectors.main.tools)?.children.length;
+            if(childrenLength === 1){
+                setDownloadButton(article, pageSelectors.main.tools, pageSelectors.main.toolsCss, buttonCss);
+            }
         }
     }
 
