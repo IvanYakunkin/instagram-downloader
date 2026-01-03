@@ -20,6 +20,7 @@ export const generateFileName = (containerTag: HTMLElement, extension: string = 
 // Date format - MM-DD-YYYY
 const getPostDate = (containerTag: HTMLElement) => {
     const timeTags = Array.from(containerTag.querySelectorAll("time"));
+    if(!timeTags.length) return null;
     const lastTimeTag = timeTags[timeTags.length - 1];
     const datetimeAttr = lastTimeTag.getAttribute("datetime");
     
@@ -49,10 +50,10 @@ const getChannelName = (conatinerTag: HTMLElement) => {
     }
 
     if(channelNameLink){
-        let channelName = channelNameLink.getAttribute("href");
-        if(channelName){
-            channelName = channelName.replace(/\//g, '');
-            return channelName;
+        let channelHref = channelNameLink.getAttribute("href");
+        if(channelHref){
+            // Return the first path-element
+            return channelHref.split("/")[1];
         }
     }
     
