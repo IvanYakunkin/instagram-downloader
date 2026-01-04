@@ -27,7 +27,7 @@ export const pageSelectors: PageSelectors = {
     },
   },
   reels: {
-    container: "main>div:first-child",
+    container: "main>.x1pq812k",
     tools: "div.x78zum5.xedcshv:last-child>div:last-child",
     toolsCss: {
    
