@@ -10,7 +10,10 @@ export const useStoriesPageObserver = () => {
     const container: HTMLElement | null = document.querySelector(pageSelectors.stories.container);
 
     if(container){
-        setDownloadButton(container, pageSelectors.stories.tools, pageSelectors.stories.toolsCss, localStyles);
+        const containerElement: HTMLElement | null = container.querySelector('[class="x5yr21d"]');
+        if(containerElement && containerElement.children.length === 3){
+            setDownloadButton(container, pageSelectors.stories.tools, pageSelectors.stories.toolsCss, localStyles);
+        }
     }
 
     return new MutationObserver((mutation) => {             
