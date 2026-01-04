@@ -2,7 +2,7 @@ import { useMainPageObserver } from "./observers/mainPageObserver";
 import { usePostPageObserver } from "./observers/postPageObserver";
 import { useReelPageObserver } from "./observers/reelPageObserver";
 import { useReelsPageObserver } from "./observers/reelsPageObserver";
-import { findCurrentRoute, registerPageObserver, useRouterObserver } from "./observers/routerObserver";
+import { findCurrentRoute, useRouterObserver } from "./observers/routerObserver";
 import { useStoriesPageObserver } from "./observers/storiesPageObserver";
 import { pageSelectors } from "./selectors/pageSelectors";
 import { setVideoLinks } from "./states/videoLinks";
@@ -26,7 +26,7 @@ const router: IRouter[] = [
     (document.head || document.documentElement).appendChild(script);
 }());
 
-// Observer when navigating
+// Use observer when navigating
 window.addEventListener('pushstate', () => {
     const currentRoute = findCurrentRoute(router);
     if(currentRoute) useRouterObserver(currentRoute);
@@ -41,21 +41,18 @@ window.addEventListener('popstate', () => {
 window.addEventListener("DOMContentLoaded", () => {
     injectProgressContainer();
     const currentRoute = findCurrentRoute(router);
-    if(!currentRoute) return;
-    const localObserverElement: HTMLElement | null = document.querySelector(currentRoute.targetSelector);
-    registerPageObserver(() => currentRoute.callback(localObserverElement), localObserverElement);
+    if(currentRoute) useRouterObserver(currentRoute);
 });
 
 // Receive videos
 window.addEventListener('message', (event) => {
-  if (
-    event.source !== window ||
-    event.data?.source !== 'EXT_FETCH_INTERCEPT'
-  ) {
-    return;
-  }
-
-  setVideoLinks(event.data.links);
+    if (
+        event.source !== window ||
+        event.data?.source !== 'EXT_FETCH_INTERCEPT'
+    ) {
+        return;
+    }
+    setVideoLinks(event.data.links);
 });
 
 
