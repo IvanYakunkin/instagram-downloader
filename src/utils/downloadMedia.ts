@@ -64,16 +64,23 @@ const downloadBlob = (blob: Blob, filename: string) => {
     URL.revokeObjectURL(downloadUrl);
 }
 
-const startDownloading = async(url: string, filename: string, uniqueProgressId?: string) => {
-    const photoResponse = await fetch(url);
-    if(!photoResponse.ok || !photoResponse.body){
+const startDownloading = async(url: string, audio: string | null, filename: string, uniqueProgressId?: string) => {
+    const mediaResponse = await fetch(url);
+    if(!mediaResponse.ok || !mediaResponse.body){
         throw new Error("Extension Error: Response was not ok");
     }
 
-    const chunks = await fillChunks(photoResponse, uniqueProgressId);
-    const blob = new Blob(chunks);
+    const chunks = await fillChunks(mediaResponse, uniqueProgressId);
+    const videoBlob = new Blob(chunks);
+    if(audio){
+        const audioResponse = await fetch(audio);
+        if(audioResponse.ok && audioResponse.body){
+            const audioBlob = await audioResponse.blob();
+            downloadBlob(audioBlob, filename);
+        }
+    }
     
-    downloadBlob(blob, filename);
+    downloadBlob(videoBlob, filename);
 }
 
 export const downloadResource = (containerTag: HTMLElement) => {
@@ -127,26 +134,21 @@ export const downloadResource = (containerTag: HTMLElement) => {
         const blobUrl = postVideo.src;
         const filename = generateFileName(containerTag, "mp4") || "video.mp4";    
         const uniqueProgressId = addProgressBar(filename);
-        const realUrl = videoLinks.find(l => {
-            if(l.blobUrl === blobUrl){
-                const url = new URL(l.realUrl);
-                if(url.pathname.includes("/t2/")) return true;
-            }
+        const foundMediaLinks = videoLinks.filter(l => l.blobUrl === blobUrl);
+        const videoUrl = foundMediaLinks.find(l => l.realUrl.includes("/t2/"))?.realUrl;
+        const audioUrl = foundMediaLinks.find(l => l.realUrl.includes("/t16/"))?.realUrl;
 
-            return false;
-
-        })?.realUrl;
-
-        if (!realUrl) {
+        if (!videoUrl) {
             console.log("Extension Error: Video was not found");
             return;
         }
-        startDownloading(realUrl, filename, uniqueProgressId);
+               
+        startDownloading(videoUrl, audioUrl || null, filename, uniqueProgressId);
     }else if (postImage){
         const imageUrl = postImage.src;
         const filename = generateFileName(containerTag, "jpg") || "image.jpg";
         const uniqueProgressId = addProgressBar(filename);
-        startDownloading(imageUrl, filename, uniqueProgressId);
+        startDownloading(imageUrl, null, filename, uniqueProgressId);
     }else{
         console.log("Extension error: Resource was not found");
     }
